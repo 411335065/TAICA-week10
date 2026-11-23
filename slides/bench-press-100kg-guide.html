@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>臥推 100KG 破關圖譜大師班 ｜ Graph 導航實戰指南</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #fff7ed 0%, #f0fdf4 50%, #f0f9ff 100%);
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --primary-coral: #ff5a36;
+      --primary-coral-light: #fff1ee;
+      --accent-amber: #f59e0b;
+      --accent-amber-light: #fef3c7;
+      --accent-mint: #10b981;
+      --accent-mint-light: #ecfdf5;
+      --accent-blue: #3b82f6;
+      --accent-blue-light: #eff6ff;
+      --accent-purple: #8b5cf6;
+      --accent-purple-light: #f5f3ff;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 20px 30px -10px rgba(255, 90, 54, 0.18);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+    }
+
+    /* Top App Bar */
+    header {
+      padding: 0.65rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1.5px solid #e2e8f0;
+      z-index: 30;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      font-size: 1.5rem;
+      background: var(--primary-coral-light);
+      padding: 0.25rem 0.5rem;
+      border-radius: 10px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #0f172a;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, var(--primary-coral), #ff7849);
+      color: #ffffff;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      box-shadow: 0 2px 6px rgba(255, 90, 54, 0.25);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .slide-badge {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--primary-coral);
+      background: var(--primary-coral-light);
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-action {
+      background: #ffffff;
+      border: 1.5px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.4rem 0.85rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 700;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-action:hover {
+      border-color: var(--primary-coral);
+      color: var(--primary-coral);
+    }
+
+    /* GRAPH MINI-MAP NAV BAR */
+    .graph-bar {
+      background: #ffffff;
+      border-bottom: 2px solid #edf2f7;
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      z-index: 25;
+    }
+
+    .graph-node {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .graph-node:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .graph-node.active {
+      background: var(--primary-coral);
+      color: #ffffff;
+      border-color: var(--primary-coral);
+      box-shadow: 0 2px 8px rgba(255, 90, 54, 0.3);
+      transform: scale(1.05);
+    }
+
+    .graph-node.is-gate {
+      border: 1.5px dashed var(--accent-amber);
+      color: #b45309;
+      background: var(--accent-amber-light);
+    }
+
+    .graph-node.is-gate.active {
+      background: var(--accent-amber);
+      color: #ffffff;
+      border-color: var(--accent-amber);
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .graph-connector {
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      font-weight: 900;
+    }
+
+    /* Main Slide Stage */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      width: 92%;
+      max-width: 1140px;
+      height: 90%;
+      max-height: 710px;
+      background: var(--card-bg);
+      border: 2px solid #f1f5f9;
+      border-radius: 28px;
+      padding: 2.5rem 3.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+      pointer-events: none;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+      z-index: 5;
+    }
+
+    /* Slide Typography */
+    .slide-badge-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    .tag-coral { color: var(--primary-coral); }
+    .tag-blue { color: var(--accent-blue); }
+    .tag-amber { color: var(--accent-amber); }
+    .tag-mint { color: var(--accent-mint); }
+    .tag-purple { color: var(--accent-purple); }
+
+    .slide-title {
+      font-size: 2.15rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-desc {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.2rem;
+    }
+
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 2px dashed #f1f5f9;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.85rem;
+    }
+
+    .card {
+      background: #f8fafc;
+      border: 1.5px solid #edf2f7;
+      border-radius: 18px;
+      padding: 1.35rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+      border-color: #cbd5e1;
+    }
+
+    .card-highlight-coral { background: var(--primary-coral-light); border-color: #ffd6cc; }
+    .card-highlight-blue { background: var(--accent-blue-light); border-color: #bfdbfe; }
+    .card-highlight-mint { background: var(--accent-mint-light); border-color: #a7f3d0; }
+    .card-highlight-amber { background: var(--accent-amber-light); border-color: #fde68a; }
+    .card-highlight-purple { background: var(--accent-purple-light); border-color: #ddd6fe; }
+
+    .card-icon {
+      font-size: 1.5rem;
+      line-height: 1;
+      margin-bottom: 0.2rem;
+    }
+
+    .card-title {
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-text {
+      font-size: 0.92rem;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    /* Lists */
+    .fun-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .fun-list li {
+      font-size: 0.92rem;
+      line-height: 1.5;
+      color: #334155;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.45rem;
+    }
+
+    .fun-list li strong {
+      color: #0f172a;
+    }
+
+    /* Gateway Box */
+    .gateway-box {
+      background: #fffbeb;
+      border: 2px dashed #f59e0b;
+      border-radius: 16px;
+      padding: 1.25rem;
+    }
+
+    .gateway-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 800;
+      color: #b45309;
+      font-size: 1.05rem;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Floating Arrow Controls */
+    .arrow-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      color: #0f172a;
+      font-size: 1.4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 15;
+    }
+
+    .arrow-btn:hover {
+      background: var(--primary-coral);
+      color: #ffffff;
+      border-color: var(--primary-coral);
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .arrow-prev { left: 1.25rem; }
+    .arrow-next { right: 1.25rem; }
+
+    /* Interactive Widgets */
+    .interactive-panel {
+      background: #ffffff;
+      border: 2px dashed #cbd5e1;
+      border-radius: 18px;
+      padding: 1.25rem;
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .toggle-tab {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      background: #f1f5f9;
+      border: 2px solid transparent;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.92rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      color: #475569;
+    }
+
+    .toggle-tab.active {
+      background: var(--primary-coral);
+      color: #ffffff;
+      border-color: var(--primary-coral);
+      box-shadow: 0 4px 10px rgba(255, 90, 54, 0.25);
+    }
+
+    /* Calculator */
+    .calc-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .calc-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      background: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .calc-btn:hover {
+      background: var(--accent-mint);
+      color: white;
+      border-color: var(--accent-mint);
+    }
+
+    .calc-display {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary-coral);
+      background: var(--primary-coral-light);
+      padding: 0.2rem 1.2rem;
+      border-radius: 12px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clean-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .clean-table th {
+      background: #f8fafc;
+      color: #475569;
+      font-weight: 700;
+      padding: 0.5rem 0.75rem;
+      border-bottom: 2px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .clean-table td {
+      padding: 0.5rem 0.75rem;
+      border-bottom: 1px solid #f1f5f9;
+      color: #1e293b;
+    }
+
+    .clean-table tr:last-child td {
+      font-weight: 800;
+      color: var(--primary-coral);
+      background: #fff7ed;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🗺️</div>
+      <div>
+        <div class="brand-title">臥推 100KG 破關圖譜大師班</div>
+      </div>
+      <span class="brand-badge">Graph 導航實戰版</span>
+    </div>
+
+    <div class="nav-actions">
+      <span class="slide-badge" id="slideIndicator">1 / 14</span>
+      <button class="btn-action" onclick="toggleFullscreen()">⛶ 全螢幕觀看</button>
+    </div>
+  </header>
+
+  <!-- GRAPH INTERACTIVE MINI-MAP -->
+  <div class="graph-bar" id="graphBar">
+    <div class="graph-node active" onclick="goToSlide(1)">🚩 全景地圖</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node is-gate" onclick="goToSlide(2)">⚡ Gate 0 安全</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(3)">🦶 P1 腿部驅動</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(4)">🏛️ P1 胸椎後盾</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(5)">🛑 P1 掌根深壓</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(6)">📐 P1 箭頭 J 軌跡</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node is-gate" onclick="goToSlide(7)">🔍 Gate 1 檢核</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node is-gate" onclick="goToSlide(8)">🔀 Gate 2 弱點分流</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(9)">💥 分支 A 離胸</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(10)">🔒 分支 B 鎖定</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(11)">📈 P3 課表推進</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(12)">🗺️ 8週衝刺圖</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node" onclick="goToSlide(13)">🧮 P4 熱身速算</div>
+    <span class="graph-connector">→</span>
+    <div class="graph-node is-gate" onclick="goToSlide(14)">🏆 Gate 4 登頂</div>
+  </div>
+
+  <!-- Stage -->
+  <main>
+    <button class="arrow-btn arrow-prev" onclick="prevSlide()" aria-label="上一頁">‹</button>
+    <button class="arrow-btn arrow-next" onclick="nextSlide()" aria-label="下一頁">›</button>
+
+    <!-- Slide 1: Graph Master Overview -->
+    <div class="slide active" data-index="1">
+      <div>
+        <div class="slide-badge-tag tag-coral">🗺️ START NODE ✦ 起點全景圖</div>
+        <h1 class="slide-title">臥推破百「通關圖譜」全景導航</h1>
+        <p class="slide-desc">兄弟！100KG 不是靠運氣，而是一張有節點、有分支、有檢核閘門（Gateways）的精密通關地圖！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-3">
+          <div class="card card-highlight-coral">
+            <div class="card-icon">🚩</div>
+            <div class="card-title">起點現狀：80~85kg 瓶頸</div>
+            <div class="card-text">
+              新手紅利已用盡。單靠蠻力推只會讓關節代償，我們將透過 5 大階段、4 道檢核閘門逐步升級！
+            </div>
+          </div>
+          <div class="card card-highlight-amber">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">4 大檢核閘門 (Gates)</div>
+            <div class="card-text">
+              <strong>Gate 0</strong> 關節安全 ➔ <strong>Gate 1</strong> 出槓力線 ➔ <strong>Gate 2</strong> 弱點分流 ➔ <strong>Gate 4</strong> 測驗日出槓自檢。
+            </div>
+          </div>
+          <div class="card card-highlight-mint">
+            <div class="card-icon">🏆</div>
+            <div class="card-title">終點成就：雙邊上大餅！</div>
+            <div class="card-text">
+              精準修復力學漏力點，讓每組推舉都有 100% 的地面反作用力與上背鋼鐵支撐，穩拿 100KG！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>💡 導航提示：點選上方任一節點可直接跳轉，或按鍵盤空白鍵推進</span>
+        <span>Slide 1 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 2: Gate 0 Safety Check -->
+    <div class="slide" data-index="2">
+      <div>
+        <div class="slide-badge-tag tag-amber">⚡ GATEWAY 0 ✦ 關節安全檢核</div>
+        <h2 class="slide-title">Gate 0：你的肩膀與手腕在發出警報嗎？</h2>
+        <p class="slide-desc">在架設重砲台之前，先檢查地基有沒有裂縫！帶傷硬練是永遠無法突破 100kg 的最大元兇。</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="gateway-box">
+            <div class="gateway-header">🔍 檢核點：痛感自我掃描</div>
+            <ul class="fun-list">
+              <li><strong>[  ] 手腕外側或腕隧道痛？</strong> $\rightarrow$ 代表手腕正在向後折「拜年」，骨骼力線完全偏離！</li>
+              <li><strong>[  ] 肩峰前側深層刺痛？</strong> $\rightarrow$ 代表手肘開 90° 外展死角，肱骨正在撞擊肩峰！</li>
+              <li><strong>[  ] 下背腰椎痠痛壓迫？</strong> $\rightarrow$ 代表你用折腰代替胸椎挺胸，椎間盤在抗議！</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-mint">
+            <div class="card-icon">🧭</div>
+            <div class="card-title">通關決策分流 (Decision Rule)</div>
+            <div class="card-text">
+              <strong>🔴 若有上述任一疼痛</strong>：立即進入「退階修正支線」！改用 Bulldog Grip 掌根握法、收手肘至 45° 箭頭、背肌補上 1:1 推拉量。<br><br>
+              <strong>🟢 若完全無痛且靈活</strong>：恭喜通過 Gate 0！准予進入 Phase 1 架設鋼鐵砲台！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>引用知識庫：[[injury-prehab/shoulder-pain]], [[injury-prehab/wrist-pain]]</span>
+        <span>Slide 2 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 3: Phase 1 Node 1 - Leg Drive -->
+    <div class="slide" data-index="3">
+      <div>
+        <div class="slide-badge-tag tag-blue">🦶 PHASE 1 ✦ 節點 1：下半身引擎</div>
+        <h2 class="slide-title">腿部驅動（Leg Drive）：把地面向前蹬開！</h2>
+        <p class="slide-subtitle">臥推絕對不是「躺著只用手推」！大腿與臀部是推動 100kg 的超導推進器。</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-icon">🎯</div>
+            <div class="card-title">【要做什麼】執行細節</div>
+            <ul class="fun-list">
+              <li><strong>全腳掌釘死地面</strong>：小腿約垂直地面或略向後收，雙腳像樹根一樣扎進地板。</li>
+              <li><strong>水平力量傳遞</strong>：槓鈴推起瞬間，<strong>不是向上抬屁股，而是像做腿推機一樣，用力把腳掌貼地向前踢！</strong></li>
+              <li>力量會經由大腿、骨盆轉移為水平反作用力，將上背死死壓進椅面！</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-coral">
+            <div class="card-icon">📋</div>
+            <div class="card-title">【如何檢查】合格標準</div>
+            <ul class="fun-list">
+              <li><strong>[  ] 臀部 100% 貼緊凳面</strong>：嚴禁屁股離椅！離凳等於雜耍作弊，且腰椎承受危險剪力。</li>
+              <li><strong>[  ] 感受腳推力傳到背部</strong>：推起時是否感覺「背被推緊進凳墊」？如果有，恭喜抓到 Leg Drive！</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>教練口訣：「不是向上拱屁股，是用腳把地板向前蹬開！」</span>
+        <span>Slide 3 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 4: Phase 1 Node 2 - Scapula -->
+    <div class="slide" data-index="4">
+      <div>
+        <div class="slide-badge-tag tag-blue">🏛️ PHASE 1 ✦ 節點 2：剛性砲台</div>
+        <h2 class="slide-title">胸椎挺起 vs 致命折腰：打造鋼鐵後盾</h2>
+        <p class="slide-desc">力量舉起橋的本質是「胸椎後伸挺胸」，千萬別拿脆弱的腰椎開玩笑！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card card-highlight-mint">
+            <div class="card-icon">✨</div>
+            <div class="card-title">【要做什麼】胸椎挺起＋肩胛後收下壓</div>
+            <ul class="fun-list">
+              <li><strong>胸骨挺向天花板</strong>：主動用胸椎後伸把胸腔抬高，自然縮短槓鈴有效位移行程。</li>
+              <li><strong>把肩胛骨插進後口袋</strong>：雙肩後收並用力下壓，將肩膀緊緊嵌進臥推凳墊中。</li>
+              <li><strong>推拉 1:1 黃金律</strong>：背部中下斜方肌與菱形肌是推力反作用力的「剛性煞車板」。</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-amber">
+            <div class="card-icon">🔍</div>
+            <div class="card-title">【如何檢查】腰椎安全檢驗</div>
+            <ul class="fun-list">
+              <li><strong>[  ] 下背自然放鬆無壓迫</strong>：手掌應能輕鬆滑入下背自然弧度，而不是腰椎折到極限。</li>
+              <li><strong>[  ] 出槓後胸部不塌陷</strong>：大重量觸胸時，上胸是否依然挺拔？若胸口癟掉代表背肌失守！</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>引用知識庫：[[technique/setup-and-execution]], [[biomechanics/muscle-recruitment]]</span>
+        <span>Slide 4 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 5: Phase 1 Node 3 - Wrist Alignment -->
+    <div class="slide" data-index="5">
+      <div>
+        <div class="slide-badge-tag tag-blue">🛑 PHASE 1 ✦ 節點 3：手腕正位</div>
+        <h2 class="slide-title">掌根深壓 Bulldog Grip：拒絕向槓鈴拜年！</h2>
+        <p class="slide-desc">槓鈴放手指根部＝手腕背屈 45 度＝腕管神經直接承受 100kg 剪力！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-icon">🐾</div>
+            <div class="card-title">【要做什麼】鬥牛犬握法 (Bulldog Grip)</div>
+            <ul class="fun-list">
+              <li><strong>深置掌根</strong>：將槓鈴斜放在<strong>大魚際與小魚際交界的骨性基座</strong>上。</li>
+              <li><strong>直立中立位 (Neutral)</strong>：手掌微向內旋，讓槓鈴重力線垂直穿透橈骨與尺骨骨髓！</li>
+              <li><strong>5分鐘動態熱身</strong>：腕環旋轉 1min ➔ 側擺 1min ➔ 屈伸 1min ➔ 極速開合掌 1min。</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-coral">
+            <div class="card-icon">📐</div>
+            <div class="card-title">【如何檢查】手腕角度檢查</div>
+            <ul class="fun-list">
+              <li><strong>[  ] 手背與小臂背面平直</strong>：手腕背屈角度必須小於 10 度，不可向後嚴重彎折！</li>
+              <li><strong>[  ] 大重量輔助</strong>：推 85kg 以上可使用中硬度專業護腕，纏繞必須跨過手腕關節縫。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>引用知識庫：[[injury-prehab/wrist-pain]], [[technique/grip-and-wrist]]</span>
+        <span>Slide 5 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 6: Phase 1 Node 4 - Elbow & J-Curve -->
+    <div class="slide" data-index="6">
+      <div>
+        <div class="slide-badge-tag tag-blue">🏹 PHASE 1 ✦ 節點 4：箭頭與 J 軌跡</div>
+        <h2 class="slide-heading">手肘 45°~60° 箭頭夾角 ＆ 神奇 J-Curve 軌跡</h2>
+        <p class="slide-desc">手肘開 90 度是在給肩峰玩碰碰車；直線推是讓力矩放大自討苦吃！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-icon">🏹</div>
+            <div class="card-title">【要做什麼】下放箭頭與觸胸點</div>
+            <ul class="fun-list">
+              <li><strong>45°~60° 箭頭形</strong>：大臂與軀幹呈自然箭頭，肩峰下空間完全打開，杜絕夾擠。</li>
+              <li><strong>觸胸點定位</strong>：精準落在<strong>乳頭下緣至劍突連線</strong>，維持前臂在底部垂直地面。</li>
+              <li><strong>J-Curve 斜推軌跡</strong>：推起時先<strong>斜向臉部後上方發力</strong>，回到肩關節正上方鎖定！</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-blue">
+            <div class="card-icon">📹</div>
+            <div class="card-title">【如何檢查】側面錄影診斷</div>
+            <ul class="fun-list">
+              <li><strong>[  ] 前臂底部垂直地面</strong>：若手肘向內縮過多或向外飄，握距與手肘角度需微調。</li>
+              <li><strong>[  ] 軌跡呈平滑微弧形</strong>：槓鈴向心軌跡是否順暢朝向肩膀正上方？若垂直直推必卡關！</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>教練口訣：「箭頭下放落劍突，J字斜推回肩膀！」</span>
+        <span>Slide 6 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 7: Gate 1 Form Gateway -->
+    <div class="slide" data-index="7">
+      <div>
+        <div class="slide-badge-tag tag-amber">🔍 GATEWAY 1 ✦ 出槓動作品質檢核</div>
+        <h2 class="slide-title">Gate 1：出槓力線四道綠燈檢核</h2>
+        <p class="slide-desc">在進入衝刺大重量前，用這四道關卡審查你的動作品質，全過才准加重！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-4">
+          <div class="card card-highlight-mint">
+            <div class="card-icon">🦶</div>
+            <div class="card-title" style="font-size: 1rem;">檢核 1：蹬地不離凳</div>
+            <div class="card-text" style="font-size: 0.85rem;">雙腳全掌扎地，水平反作用力有感，臀部全程焊死在椅面上！</div>
+          </div>
+          <div class="card card-highlight-mint">
+            <div class="card-icon">🏛️</div>
+            <div class="card-title" style="font-size: 1rem;">檢核 2：胸挺背收緊</div>
+            <div class="card-text" style="font-size: 0.85rem;">胸椎挺拔後伸，肩胛骨牢固鎖進椅墊，觸胸時胸廓完全不凹陷！</div>
+          </div>
+          <div class="card card-highlight-mint">
+            <div class="card-icon">🛑</div>
+            <div class="card-title" style="font-size: 1rem;">檢核 3：手腕筆直立</div>
+            <div class="card-text" style="font-size: 0.85rem;">槓鈴深壓掌根，手腕直立中立位，杜絕向後折腕拜年！</div>
+          </div>
+          <div class="card card-highlight-mint">
+            <div class="card-icon">🏹</div>
+            <div class="card-title" style="font-size: 1rem;">檢核 4：箭頭 J 軌跡</div>
+            <div class="card-text" style="font-size: 0.85rem;">手肘 45°~60° 下放觸劍突，推起走 J-Curve 回到肩上方！</div>
+          </div>
+        </div>
+
+        <div class="gateway-box" style="margin-top: 0.5rem;">
+          <div class="gateway-header">🚦 通關指令：</div>
+          <p style="font-size: 0.95rem; color: #78350f;">
+            四道檢核全數綠燈？太棒了！你的骨骼力學砲台已完美架設完成，准予進入 <strong>Phase 2 停滯點弱點分流</strong>！
+          </p>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Gate 1 通關 ✦ 邁向專項弱點擊破</span>
+        <span>Slide 7 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 8: Gate 2 Sticking Point Decision Tree -->
+    <div class="slide" data-index="8">
+      <div>
+        <div class="slide-badge-tag tag-amber">🔀 GATEWAY 2 ✦ 弱點分流決策樹</div>
+        <h2 class="slide-title">Gate 2：大重量時，你到底死在哪裡？</h2>
+        <p class="slide-desc">推 85kg~90kg 遇到黏滯點？點擊下方選項，系統立即為你啟動專屬破解分支！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="interactive-panel">
+          <div class="toggle-group">
+            <div class="toggle-tab active" id="tabChest" onclick="setStickingPoint('chest')">
+              💥 弱點 A：離胸 0~5cm 就卡死起不來
+            </div>
+            <div class="toggle-tab" id="tabLockout" onclick="setStickingPoint('lockout')">
+              🔒 弱點 B：推到一半手肘外甩、最後鎖不死
+            </div>
+          </div>
+
+          <div id="diagnosticContent">
+            <div class="grid-2">
+              <div style="background: #fff1ee; padding: 1.2rem; border-radius: 14px;">
+                <h4 style="color: var(--primary-coral); font-weight: 800; margin-bottom: 0.5rem;">🔍 離胸卡死：病因剖析</h4>
+                <p style="font-size: 0.92rem; color: #334155; line-height: 1.6;">
+                  1. 胸大肌在極限拉伸位（長肌纖維長度）的<strong>靜態向心啟動力量不足</strong>。<br>
+                  2. 觸胸瞬間胸椎塌陷、上背剛性後盾鬆脫，行程被動拉長。<br>
+                  3. 腿部驅動（Leg Drive）啟動過慢，離胸瞬間缺乏反作用力。
+                </p>
+              </div>
+              <div style="background: #f0fdf4; padding: 1.2rem; border-radius: 14px;">
+                <h4 style="color: var(--accent-mint); font-weight: 800; margin-bottom: 0.5rem;">🚀 分流處方：進入【分支 A】</h4>
+                <ul class="fun-list">
+                  <li><strong>2~3秒暫停臥推 (Paused Bench)</strong>：消除彈震反彈，強迫肌肉純力量推起！</li>
+                  <li><strong>Spoto Press</strong>：槓鈴懸停胸口上 2cm 停頓，維持全身緊繃度。</li>
+                  <li><strong>胸部支撐划船</strong>：加強肩胛骨在重壓下鎖死的能力。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Gate 2 分流決策 ✦ 點擊上方按鈕切換弱點路徑</span>
+        <span>Slide 8 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 9: Branch A Off-Chest -->
+    <div class="slide" data-index="9">
+      <div>
+        <div class="slide-badge-tag tag-coral">💥 BRANCH A ✦ 離胸救星專項</div>
+        <h2 class="slide-title">分支 A：2~3 秒暫停推與 Spoto 懸停推</h2>
+        <p class="slide-desc">專治各種「胸口像被強力膠黏住」的離胸無力！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card card-highlight-coral">
+            <div class="card-title">
+              <span>🛑 2~3 秒暫停臥推 (Paused Bench)</span>
+            </div>
+            <ul class="fun-list">
+              <li><strong>【要做什麼】</strong>：用 75%~80% 重量，槓鈴貼胸後<strong>大聲默數「一秒、兩秒」</strong>，維持全身緊繃，然後爆發上推！</li>
+              <li><strong>【如何檢查】</strong>：槓鈴在胸口必須<strong>絕對靜止</strong>，不可用胸口肌肉回彈彈起！</li>
+              <li><strong>【神經效益】</strong>：極度強化運動神經元在不利力臂下的發力率（Rate of Force Development）。</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-amber">
+            <div class="card-title">
+              <span>⏸️ Spoto Press (胸上 2cm 懸停推)</span>
+            </div>
+            <ul class="fun-list">
+              <li><strong>【要做什麼】</strong>：槓鈴下放至距離胸口約 2 公分處，<strong>完全懸空停頓 1~2 秒</strong>，不可觸胸。</li>
+              <li><strong>【如何檢查】</strong>：上背、肩膀與前臂是否 100% 自主維持緊繃等長收縮？</li>
+              <li><strong>【課表安排】</strong>：每週第二個臥推日首個輔助動作，3組 × 4~5次。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>引用知識庫：[[sticking-points/lockout-and-off-chest]], [[variations/range-of-motion]]</span>
+        <span>Slide 9 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 10: Branch B Lockout -->
+    <div class="slide" data-index="10">
+      <div>
+        <div class="slide-badge-tag tag-amber">🔒 BRANCH B ✦ 鎖定救星專項</div>
+        <h2 class="slide-heading">分支 B：木板超負荷推與窄握臥推</h2>
+        <p class="slide-desc">專治手肘伸不直、最後 10 公分手肘外甩顫抖的鎖死無力！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card card-highlight-amber">
+            <div class="card-title">
+              <span>🪵 木板/架上臥推 (Board / Pin Press)</span>
+            </div>
+            <ul class="fun-list">
+              <li><strong>【要做什麼】</strong>：胸口墊 1~2 塊木板，直接做手肘 90° 到鎖定段，載入 <strong>105% 超負荷（95~102kg）</strong>！</li>
+              <li><strong>【如何檢查】</strong>：大腦能否克服大重量壓迫感？三頭肌能否全力伸肘鎖死？</li>
+              <li><strong>【執行頻率】</strong>：第 4~5 週每週一次，2~3 組 × 2~3 次。</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-blue">
+            <div class="card-title">
+              <span>🎯 窄握臥推 (Close-Grip Bench)</span>
+            </div>
+            <ul class="fun-list">
+              <li><strong>【要做什麼】</strong>：握距縮小至與肩同寬，手肘貼緊軀幹下放，拉長伸肘行程。</li>
+              <li><strong>【如何檢查】</strong>：是否完全隔絕胸肌外側代償，把負荷 100% 灌入肱三頭肌？</li>
+              <li><strong>【課表安排】</strong>：全程 70% 負重，3~4 組 × 6~8 次厚植肌肥大！</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>引用文獻：Fischer et al. (2025) Top ROM 三頭肌活化最高</span>
+        <span>Slide 10 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 11: Phase 3 Progressive Overload -->
+    <div class="slide" data-index="11">
+      <div>
+        <div class="slide-badge-tag tag-mint">📈 PHASE 3 ✦ 節點 6：推進槓桿</div>
+        <h2 class="slide-title">漸進式超負荷：聰明人加次數，憨人硬加重量！</h2>
+        <p class="slide-desc">超負荷有 4 種推進維度，別把「每週無腦加 2.5kg」當成唯一出路！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-4">
+          <div class="card">
+            <div class="card-title" style="font-size: 0.95rem;">1. 雙重進階法</div>
+            <div class="card-text" style="font-size: 0.85rem;">
+              <strong>先加次數，再加重量！</strong> 80kg 做 6~8 下，直到推滿 3組 × 8下，才加重到 82.5kg！
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="font-size: 0.95rem;">2. 提高訓練頻率</div>
+            <div class="card-text" style="font-size: 0.85rem;">
+              一週練 1 次推到虛脫？改為<strong>一週 2~3 練</strong>！打散容量，每次推舉都在最高動作品質下！
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title" style="font-size: 0.95rem;">3. 3-1-0-1 節奏</div>
+            <div class="card-text" style="font-size: 0.85rem;">
+              3秒慢離心、1秒底端停頓、0秒爆發上推。相同負重下，目標肌群做功直接翻倍！
+            </div>
+          </div>
+          <div class="card card-highlight-mint">
+            <div class="card-title" style="font-size: 0.95rem;">4. RPE 8 留餘裕</div>
+            <div class="card-text" style="font-size: 0.85rem;">
+              平時每組<strong>保留 1~2 下餘裕（RIR 1~2）</strong>。天天推到力竭變形，神經系統提早報廢！
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>引用知識庫：[[programming/progressive-overload]]</span>
+        <span>Slide 11 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 12: 8-Week Master Plan -->
+    <div class="slide" data-index="12">
+      <div>
+        <div class="slide-badge-tag tag-purple">🗺️ PHASE 3 ✦ 節點 7：實戰週期地圖</div>
+        <h2 class="slide-title">衝刺 100KG：8 週登頂週期進階表</h2>
+        <p class="slide-desc">每週任務明確、檢核清楚，從 85kg 穩健邁向 100kg 大關！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-4" style="gap: 0.75rem;">
+          <div class="card" style="padding: 1rem; border-top: 4px solid var(--primary-coral);">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--primary-coral);">STAGE 1 ✦ W1~W3</div>
+            <div style="font-weight: 800; font-size: 0.92rem; margin: 0.2rem 0;">肌力基礎累積期</div>
+            <ul style="font-size: 0.8rem; color: #475569; list-style-position: inside; line-height: 1.5;">
+              <li><strong>Day 1 (主推)</strong>：80kg 5×5 ➔ 82.5kg 4×6</li>
+              <li><strong>Day 2 (輔助)</strong>：暫停推 70kg 3×4 + 划船 4×10</li>
+              <li><strong>檢核點</strong>：雙重進階與腿部驅動到位。</li>
+            </ul>
+          </div>
+
+          <div class="card" style="padding: 1rem; border-top: 4px solid var(--accent-amber);">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--accent-amber);">STAGE 2 ✦ W4~W5</div>
+            <div style="font-weight: 800; font-size: 0.92rem; margin: 0.2rem 0;">弱點定向轟炸期</div>
+            <ul style="font-size: 0.8rem; color: #475569; list-style-position: inside; line-height: 1.5;">
+              <li><strong>Day 1</strong>：85kg 4×4 @ RPE 8</li>
+              <li><strong>Day 2</strong>：木板推 95kg 2×3 + 窄握推 3×6</li>
+              <li><strong>檢核點</strong>：鎖定段與大重量壓迫感消除。</li>
+            </ul>
+          </div>
+
+          <div class="card" style="padding: 1rem; border-top: 4px solid var(--accent-blue);">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--accent-blue);">STAGE 3 ✦ W6</div>
+            <div style="font-weight: 800; font-size: 0.92rem; margin: 0.2rem 0;">高強度神經轉化</div>
+            <ul style="font-size: 0.8rem; color: #475569; list-style-position: inside; line-height: 1.5;">
+              <li><strong>Day 1</strong>：87.5kg 3×3 + <strong>試探 92.5kg × 1</strong></li>
+              <li><strong>Day 2</strong>：輕度技巧推 75kg 3×3</li>
+              <li><strong>檢核點 (Gate 3)</strong>：睡眠與關節疲勞評估。</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-mint" style="padding: 1rem; border-top: 4px solid var(--accent-mint);">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--accent-mint);">STAGE 4~5 ✦ W7~W8</div>
+            <div style="font-weight: 800; font-size: 0.92rem; margin: 0.2rem 0;">減量與 PR 登頂日</div>
+            <ul style="font-size: 0.8rem; color: #475569; list-style-position: inside; line-height: 1.5;">
+              <li><strong>W7 減量週</strong>：容量砍半！70kg 3×3 徹底回血！</li>
+              <li><strong>W8 測驗日</strong>：熱身金字塔直衝 <strong>🔥 100KG × 1 (PR!)</strong></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Gate 3 減量評估 ✦ 疲勞徹底消退，超量補償爆發</span>
+        <span>Slide 12 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 13: Phase 4 Warmup Calculator -->
+    <div class="slide" data-index="13">
+      <div>
+        <div class="slide-badge-tag tag-mint">🧮 PHASE 4 ✦ 節點 8：測驗日熱身</div>
+        <h2 class="slide-title">決戰熱身金字塔 ＆ 即時重量速算小工具</h2>
+        <p class="slide-desc">測驗 1RM 絕不能胡亂試舉！依照百分比熱身，喚醒神經同時保留 100% 體能。</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="interactive-panel">
+          <div class="calc-row">
+            <span style="font-weight: 800; color: #0f172a;">🎯 今日挑戰目標重量：</span>
+            <button class="calc-btn" onclick="adjustWeight(-2.5)">-</button>
+            <div class="calc-display" id="targetWeightDisplay">100 kg</div>
+            <button class="calc-btn" onclick="adjustWeight(2.5)">+</button>
+          </div>
+
+          <table class="clean-table" id="warmupTable">
+            <thead>
+              <tr>
+                <th>階段 / 組別</th>
+                <th>計算比例</th>
+                <th>目標重量 (KG)</th>
+                <th>建議次數</th>
+                <th>組間休息</th>
+                <th>戰術意圖</th>
+              </tr>
+            </thead>
+            <tbody id="warmupBody">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>小工具即時連動 ✦ 點擊 +/- 可測試 90kg、105kg 等重量</span>
+        <span>Slide 13 / 14</span>
+      </div>
+    </div>
+
+    <!-- Slide 14: Gate 4 Grand Finale -->
+    <div class="slide" data-index="14">
+      <div>
+        <div class="slide-badge-tag tag-coral">🏆 GATEWAY 4 ✦ 登頂終結</div>
+        <h2 class="slide-title">Gate 4：出槓前 5 秒自檢口訣 ＆ 100KG 登頂！</h2>
+        <p class="slide-desc">躺上凳子、雙手握槓時，心裡默唸這 5 句通關口訣，100KG 必過！</p>
+      </div>
+
+      <div class="slide-content">
+        <div class="grid-2">
+          <div class="card card-highlight-coral">
+            <h3 style="font-size: 1.15rem; color: #0f172a; margin-bottom: 0.5rem;">📋 躺凳出槓 3 步驟口訣</h3>
+            <ul class="fun-list">
+              <li><strong>1. 【釘地】</strong>：雙腳全掌釘死，大腿準備向前蹬地！</li>
+              <li><strong>2. 【挺胸】</strong>：胸椎挺起後伸，肩胛骨牢牢鎖進椅墊！</li>
+              <li><strong>3. 【掌根】</strong>：槓鈴深壓掌根，手腕直立，出槓移至肩上方！</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight-mint">
+            <h3 style="font-size: 1.15rem; color: #0f172a; margin-bottom: 0.5rem;">🚀 下放推起 2 步驟口訣</h3>
+            <ul class="fun-list">
+              <li><strong>4. 【深吸箭頭下】</strong>：大吸一口腹內壓鎖死，手肘 45° 箭頭受控下放至劍突。</li>
+              <li><strong>5. 【蹬地 J 字推】</strong>：雙腳向前蹬開地面，槓鈴爆發斜推回肩膀正上方——<strong>100KG 鎖死！大餅入袋！</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 0.5rem; font-size: 1.25rem; font-weight: 800; color: var(--primary-coral);">
+          🎉 恭喜通過所有 Graph 檢核閘門！雙邊掛上 20kg 大餅，榮譽登頂！
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>臥推破百圖譜大師班 ✦ 成果交付</span>
+        <span>Slide 14 / 14</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 14;
+    let target1RM = 100;
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= totalSlides) {
+        currentSlide = n;
+        updateSlide();
+      }
+    }
+
+    function updateSlide() {
+      // Update Slide visibility
+      document.querySelectorAll('.slide').forEach(slide => {
+        const index = parseInt(slide.getAttribute('data-index'));
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Update Header Indicator
+      document.getElementById('slideIndicator').innerText = `${currentSlide} / ${totalSlides}`;
+
+      // Update Graph Mini-Map Nodes
+      document.querySelectorAll('.graph-node').forEach((node, i) => {
+        if (i + 1 === currentSlide) {
+          node.classList.add('active');
+        } else {
+          node.classList.remove('active');
+        }
+      });
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // Keyboard Navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Backspace') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      } else if (e.key === 'Home') {
+        goToSlide(1);
+      } else if (e.key === 'End') {
+        goToSlide(totalSlides);
+      }
+    });
+
+    // Touch Swipe
+    let touchStartX = 0;
+    let touchEndX = 0;
+    window.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; });
+    window.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) nextSlide();
+      if (touchEndX > touchStartX + 50) prevSlide();
+    });
+
+    // Widget 1: Diagnostic Switcher
+    function setStickingPoint(type) {
+      const tabChest = document.getElementById('tabChest');
+      const tabLockout = document.getElementById('tabLockout');
+      const container = document.getElementById('diagnosticContent');
+
+      if (type === 'chest') {
+        tabChest.classList.add('active');
+        tabLockout.classList.remove('active');
+        container.innerHTML = `
+          <div class="grid-2">
+            <div style="background: #fff1ee; padding: 1.2rem; border-radius: 14px;">
+              <h4 style="color: var(--primary-coral); font-weight: 800; margin-bottom: 0.5rem;">🔍 離胸卡死：病因剖析</h4>
+              <p style="font-size: 0.92rem; color: #334155; line-height: 1.6;">
+                1. 胸大肌在極限拉伸位（長肌纖維長度）的<strong>靜態向心啟動力量不足</strong>。<br>
+                2. 觸胸瞬間胸椎塌陷、上背剛性後盾鬆脫，行程被動拉長。<br>
+                3. 腿部驅動（Leg Drive）啟動過慢，離胸瞬間缺乏反作用力。
+              </p>
+            </div>
+            <div style="background: #f0fdf4; padding: 1.2rem; border-radius: 14px;">
+              <h4 style="color: var(--accent-mint); font-weight: 800; margin-bottom: 0.5rem;">🚀 分流處方：進入【分支 A】</h4>
+              <ul class="fun-list">
+                <li><strong>2~3秒暫停臥推 (Paused Bench)</strong>：消除彈震反彈，強迫肌肉純力量推起！</li>
+                <li><strong>Spoto Press</strong>：槓鈴懸停胸口上 2cm 停頓，維持全身緊繃度。</li>
+                <li><strong>胸部支撐划船</strong>：加強肩胛骨在重壓下鎖死的能力。</li>
+              </ul>
+            </div>
+          </div>
+        `;
+      } else {
+        tabLockout.classList.add('active');
+        tabChest.classList.remove('active');
+        container.innerHTML = `
+          <div class="grid-2">
+            <div style="background: #fef3c7; padding: 1.2rem; border-radius: 14px;">
+              <h4 style="color: var(--accent-amber); font-weight: 800; margin-bottom: 0.5rem;">🔍 鎖定段無力：病因剖析</h4>
+              <p style="font-size: 0.92rem; color: #334155; line-height: 1.6;">
+                1. <strong>肱三頭肌肌力耗竭</strong>，無法完成最後 1/3 的肘關節完全伸直。<br>
+                2. 手肘過早過度向外甩開（Flare），力矩崩壞且猛烈傷害肩峰。<br>
+                3. 推起時未遵循 J 軌跡及時將槓鈴推向臉部上方，導致力臂過長。
+              </p>
+            </div>
+            <div style="background: #eff6ff; padding: 1.2rem; border-radius: 14px;">
+              <h4 style="color: var(--accent-blue); font-weight: 800; margin-bottom: 0.5rem;">🚀 分流處方：進入【分支 B】</h4>
+              <ul class="fun-list">
+                <li><strong>木板/架上臥推 (Board/Pin Press)</strong>：超負荷 105% 專攻鎖定段！</li>
+                <li><strong>窄握臥推 (Close-Grip)</strong>：將握距縮至肩寬，深度刺激三頭肌伸肘能力。</li>
+                <li><strong>地板推 (Floor Press)</strong>：截斷底層，專注中段過渡力量。</li>
+              </ul>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Widget 2: Warmup Calculator
+    function adjustWeight(delta) {
+      target1RM = Math.max(60, target1RM + delta);
+      document.getElementById('targetWeightDisplay').innerText = `${target1RM} kg`;
+      renderWarmupTable();
+    }
+
+    function renderWarmupTable() {
+      const steps = [
+        { stage: "第 1 組", pct: "空槓", weight: 20, reps: "8~10 次", rest: "1 分鐘", note: "潤滑關節，複習腳踩地與肩胛收緊" },
+        { stage: "第 2 組", pct: "約 50%", weight: Math.round((target1RM * 0.5) / 2.5) * 2.5, reps: "5 次", rest: "1.5 分鐘", note: "確認掌根深壓與 45° 箭頭下放" },
+        { stage: "第 3 組", pct: "約 70%", weight: Math.round((target1RM * 0.7) / 2.5) * 2.5, reps: "3 次", rest: "2 分鐘", note: "加速推起，感受 J-Curve 軌跡" },
+        { stage: "第 4 組", pct: "約 85%", weight: Math.round((target1RM * 0.85) / 2.5) * 2.5, reps: "1 次", rest: "3 分鐘", note: "神經適應單下，維持極高爆發速度" },
+        { stage: "第 5 組", pct: "約 92.5%", weight: Math.round((target1RM * 0.925) / 2.5) * 2.5, reps: "1 次", rest: "3~4 分鐘", note: "最後微調！確認全身緊繃度" },
+        { stage: "🔥 決戰組", pct: "100% 1RM", weight: target1RM, reps: "1 次 PR!", rest: "開香檳！", note: "大口深吸腹內壓，蹬地爆發推起！" }
+      ];
+
+      const tbody = document.getElementById('warmupBody');
+      tbody.innerHTML = steps.map(s => `
+        <tr>
+          <td><strong>${s.stage}</strong></td>
+          <td>${s.pct}</td>
+          <td><strong style="color: var(--primary-coral);">${s.weight} kg</strong></td>
+          <td>${s.reps}</td>
+          <td>${s.rest}</td>
+          <td>${s.note}</td>
+        </tr>
+      `).join('');
+    }
+
+    renderWarmupTable();
+  </script>
+</body>
+</html>
